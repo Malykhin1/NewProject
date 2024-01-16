@@ -1,0 +1,41 @@
+<!--{% extends 'base.html' %}-->
+
+{% block title %}
+    {{ title }} :: {{ block.super }}
+{% endblock %}
+
+{% block sidebar %}
+    {% include 'inc/_sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+{% for item in news %}
+    <div class="card mb-3" style="width: 1300px;">
+        <!-- {{forloop.counter}}  -->
+    <div class="card-header">
+       Категория: <a href="{{ item.category.get_absolute_url }}">{{ item.category.title }}</a>
+    </div>
+        <div class="media" style="display:flex">
+            <div class="media-photo">
+                {% if item.photo %}
+                <img src="{{ item.photo.url }}" class="mr-3" width="350" alt="Photo" style="margin-left: 15px;">
+                {% else %}
+                <h6>Фото нет</h6>
+                {% endif %}
+            </div>
+            <div class="media-body" style="margin-left: 40px;">
+            <div class="card-body">
+                <h3 class="card-title " style="margin-left: 0px;">{{ item.title }}</h3>
+                {% autoescape off %}
+                <p class="card-text">{{ item.content|truncatewords:60|linebreaks }}</p>
+                {% endautoescape %}
+                 <a href="{{ item.get_absolute_url }}" class="btn btn-primary" style="margin-left: 0px;">Читать дальше...</a>
+            </div>
+            <div class="card-footer text-body-secondary">
+                {{ item.created_at|date:'Y-m-d H:i' }}
+            </div>
+            </div>
+        </div>
+        </div>
+    {% endfor %}
+{% endblock %}

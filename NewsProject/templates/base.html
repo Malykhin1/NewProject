@@ -1,0 +1,128 @@
+<!doctype html>
+{% include 'inc/_nav.html' %}
+{% load static %}
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Новости со всего мира{% endblock %}</title>
+<!--    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">-->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  </head>
+  <body style="background-color: #CCC">
+  <div class="title" style="margin-left: 10px;">
+              <h1>{{ title }}</h1>
+  </div>
+
+
+<!--Карточки новостей-->
+    <div class="container mt-3" style="margin-left: 0px;">
+        <div class="row">
+            <div class="col-md-4">
+                {% block sidebar %}SIDEBAR{% endblock %}
+            </div>
+            {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% else %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+
+            <div class="col-md-8">
+                {% block content %}CONTENT{% endblock %}
+            </div>
+
+            {% if page_obj.has_other_pages %}
+            <nav aria-label="..." style="margin-left: 900px;">
+  <ul class="pagination">
+      {% if page_obj.has_previous %}
+    <li class="page-item active">
+      <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+    </li>
+      {% endif %}
+        {% for p in page_obj.paginator.page_range %}
+        {% if page_obj.number == p %}
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" href="?page{{ p }}"> {{ p }} <span class="sr_only"></span> </a>
+        </li>
+        {% elif p > page_obj.number|add:-3 and p < page_obj.number|add:3 %}
+      <li class="page-item">
+          <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+      </li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+    <li class="page-item active">
+      <a class="page-link" href="?page={{ page_obj.next_page_number }}">Следующая</a>
+    </li>
+        {% endif %}
+<!--    <li class="page-item active" aria-current="page">-->
+<!--      <a class="page-link" href="#">2</a>-->
+<!--    </li>-->
+<!--    <li class="page-item">-->
+<!--      <a class="page-link" href="#">Next</a>-->
+<!--    </li>-->
+  </ul>
+</nav>
+            {% endif %}
+
+            <div class="col-md-4">
+<!--#меню-->
+            <div class="list-group">
+              {% for cat in categories %}
+              <a href="{% url 'Category' cat.id %}" class="list-group-item list-group-item-action">{{ cat.title }}</a>
+                {% endfor %}
+            </div>
+<!--меню end-->
+            </div>
+
+<!--            <div class="col-md-8">-->
+<!--            {% for item in news %}-->
+<!--    <div class="card mb-3">-->
+<!--        {{ forloop.counter }}-->
+<!--    <div class="card-header">-->
+<!--       Категория: <a href="{{ item.category.get_absolute_url }}">{{ item.category }}</a>-->
+<!--    </div>-->
+<!--        <div class="media" style="display:flex">-->
+<!--            <div class="media-photo">-->
+<!--                {% if item.photo %}-->
+<!--                <img src="{{ item.photo.url }}" class="mr-3" width="350" alt="Photo">-->
+<!--                {% else %}-->
+<!--                <h6>Фото нет</h6>-->
+<!--                {% endif %}-->
+<!--            </div>-->
+<!--            <div class="media-body">-->
+<!--            <div class="card-body">-->
+<!--                <h5 class="card-title {% cycle 'text-success' 'text-danger' 'text-primary' %}">{{ item.title }}</h5>-->
+<!--                {% autoescape off %}-->
+<!--                <p class="card-text">{{ item.content|truncatewords:60|linebreaks }}</p>-->
+<!--                {% endautoescape %}-->
+<!--                 <a href="#" class="btn btn-primary">Read more...</a>-->
+<!--            </div>-->
+<!--            <div class="card-footer text-body-secondary">-->
+<!--                {{ item.created_at|date:'Y-m-d H:i' }}-->
+<!--            </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        </div>-->
+<!--    {% endfor %}-->
+<!--            </div>-->
+        </div>
+    </div>
+<!--Карточки новостей end-->
+
+<!--Navbar end-->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<!--  <script src="{% static 'bootstrap/css/bootstrap.min.js' %}"></script>-->
+  </body>
+</html>
